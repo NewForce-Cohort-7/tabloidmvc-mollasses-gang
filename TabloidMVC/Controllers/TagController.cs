@@ -29,7 +29,7 @@ namespace TabloidMVC.Controllers
         {
             Tag tag = _tagRepo.GetTagById(id);
 
-            return View();
+            return View(tag);
         }
 
         // GET: TagController/Create
@@ -78,23 +78,34 @@ namespace TabloidMVC.Controllers
         }
 
         // GET: TagController/Delete/5
+        [Authorize]
         public ActionResult Delete(int id)
         {
-            return View();
+            var tag = _tagRepo.GetTagById(id);
+
+            if (tag == null) 
+            {
+                return NotFound("ID Not Found");
+            }
+
+            return View(tag);
         }
 
         // POST: TagController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Tag tag)
         {
+
             try
             {
+                _tagRepo.DeleteTag(id);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(tag);
             }
         }
 
