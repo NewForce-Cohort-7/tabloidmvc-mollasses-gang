@@ -64,7 +64,7 @@ namespace TabloidMVC.Repositories
                 {
                     cmd.CommandText = @"
                     INSERT INTO [UserProfile] (
-	[Id], [FirstName], [LastName], [DisplayName], [Email], [CreateDateTime], [ImageLocation], [UserTypeId])
+	 [FirstName], [LastName], [DisplayName], [Email], [CreateDateTime], [ImageLocation], [UserTypeId])
                     OUTPUT INSERTED.ID
                     VALUES (@firstName, @lastName, @displayName, @email, @createDateTime, @imageLocation, @userTypeId);
                 ";
