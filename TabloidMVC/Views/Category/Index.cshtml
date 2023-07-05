@@ -37,5 +37,13 @@
             </td>
         </tr>
 }
+        @*Pass error message created and assigned in TemData(stores temp data i.e  error message) inside Edit action to Index view using ViewBag( built in ASP.NET MVC mechanism)*@
+        @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+        {
+            <div class="alert alert-danger">
+                @ViewBag.ErrorMessage
+            </div>
+        }  
+
     </tbody>
 </table>
