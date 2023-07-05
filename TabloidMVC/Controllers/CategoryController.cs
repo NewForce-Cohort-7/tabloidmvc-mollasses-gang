@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using TabloidMVC.Models;
 using TabloidMVC.Repositories;
 
 namespace TabloidMVC.Controllers
@@ -17,6 +19,7 @@ namespace TabloidMVC.Controllers
         public ActionResult Index()
         {
             var categoryList = _categoryRepository.GetAll();
+            //order list in alphabetical order
             categoryList.Sort((x, y) => string.Compare(x.Name, y.Name));
             return View(categoryList);
         }
@@ -36,17 +39,20 @@ namespace TabloidMVC.Controllers
         // POST: CategoryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Category category)
         {
             try
             {
+                
+                _categoryRepository.Add(category);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(category);
             }
         }
+
 
         // GET: CategoryController/Edit/5
         public ActionResult Edit(int id)
