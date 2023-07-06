@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
 using System.Security.Claims;
+using TabloidMVC.Models;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 
@@ -13,6 +14,7 @@ namespace TabloidMVC.Controllers
     {
         private readonly IPostRepository _postRepository;
         private readonly ICategoryRepository _categoryRepository;
+
 
         public PostController(IPostRepository postRepository, ICategoryRepository categoryRepository)
         {
@@ -68,7 +70,65 @@ namespace TabloidMVC.Controllers
             }
         }
 
-        private int GetCurrentUserProfileId()
+
+        public ActionResult Edit(int id)
+        {
+            var postToEdit = _postRepository.GetPublishedPostById(
+                id);
+            if (postToEdit == null)
+            { 
+                return NotFound("Oops, This post does not seem to exist!"); 
+            }
+            return View(postToEdit);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, Post post)
+        {
+            try 
+            {
+                _postRepository.Update(post);
+                return RedirectToAction("Index");
+
+            }
+            catch 
+            { 
+                return View(post);
+            }
+
+
+        }
+
+            public ActionResult Delete(int id)
+        {
+            var postToDelete = _postRepository.GetPublishedPostById(
+                id);
+            if (postToDelete == null) 
+            {
+                return NotFound("Oops, This post does not seem to exist!");
+            }
+            return View(postToDelete);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, Post post)
+        {
+            try
+            {
+                _postRepository.Delete(id);
+                return RedirectToAction("Index");
+
+            }
+            catch
+            {
+                return View(post);
+            }
+        }
+
+            private int GetCurrentUserProfileId()
         {
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return int.Parse(id);
